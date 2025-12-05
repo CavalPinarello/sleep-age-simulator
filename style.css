@@ -1,0 +1,374 @@
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent: #3b82f6;
+    --border: #334155;
+    --danger: #ef4444;
+}
+
+/* --- LAYOUT --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.app-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 320px;
+    background: #0f172a;
+    border-right: 1px solid #1e293b;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebar header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #1e293b;
+    text-align: left;
+    /* Override global header text-align */
+    margin-bottom: 0;
+    /* Override global header margin-bottom */
+}
+
+.sidebar h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 0.25rem;
+    background: none;
+    /* Override global h1 gradient */
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+}
+
+.sidebar .subtitle {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.controls-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+/* --- MAIN VISUALIZATION --- */
+.visualization-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #020617;
+    /* Darker bg for contrast */
+    padding: 0;
+    position: relative;
+}
+
+.canvas-container {
+    flex: 1;
+    /* Take up most space */
+    position: relative;
+    width: 100%;
+    min-height: 0;
+    /* Flexbox fix */
+    background: var(--bg-secondary);
+    /* Keep original background */
+    border-radius: 0;
+    /* Remove border-radius for full height */
+    border: none;
+    /* Remove border */
+    overflow: hidden;
+}
+
+canvas#hypnogram {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- DASHBOARD (Bottom Strip) --- */
+.dashboard {
+    height: 180px;
+    background: #0f172a;
+    border-top: 1px solid #1e293b;
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0;
+    /* Remove border-radius */
+    border: none;
+    /* Remove border */
+}
+
+.dashboard h3 {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: auto;
+    /* Override global h3 width */
+    text-align: left;
+    /* Override global h3 text-align */
+}
+
+.dashboard-content {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+    height: 100%;
+}
+
+.pie-chart-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+}
+
+.legend-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+.metrics-grid {
+    display: flex;
+    gap: 2rem;
+    margin-left: auto;
+    /* Push to right */
+    grid-template-columns: unset;
+    /* Override global grid-template-columns */
+}
+
+.metric-card {
+    background: #1e293b;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 100px;
+    border: none;
+    /* Remove border */
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+}
+
+/* --- CONTROLS STYLING --- */
+.controls {
+    display: block;
+    /* Override grid display */
+    gap: unset;
+    /* Override gap */
+    margin-bottom: 0;
+    /* Override margin-bottom */
+    background: none;
+    /* Remove background */
+    padding: 0;
+    /* Remove padding */
+    border-radius: 0;
+    /* Remove border-radius */
+    border: none;
+    /* Remove border */
+}
+
+.control-group {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 1.5rem;
+    flex-direction: column;
+    /* Keep flex-direction */
+    gap: unset;
+    /* Override gap */
+}
+
+.control-group:last-child {
+    border-bottom: none;
+}
+
+.control-group>label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #60a5fa;
+    /* Blue accent */
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: none;
+    /* Override border-bottom */
+    padding-bottom: 0;
+    /* Override padding-bottom */
+}
+
+.sub-control {
+    margin-bottom: 1rem;
+    flex-direction: column;
+    /* Keep flex-direction */
+    gap: unset;
+    /* Override gap */
+}
+
+.sub-control label {
+    display: block;
+    font-size: 0.875rem;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+    justify-content: unset;
+    /* Override justify-content */
+}
+
+.sub-control label .unit {
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+/* Inputs */
+input[type="range"] {
+    width: 100%;
+    accent-color: #3b82f6;
+}
+
+select {
+    width: 100%;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+.toggle-container {
+    display: flex;
+    background: #1e293b;
+    border-radius: 6px;
+    padding: 2px;
+    border: none;
+    /* Remove border */
+}
+
+.toggle-container input {
+    display: none;
+}
+
+.toggle-container label {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    margin-bottom: 0;
+    transition: all 0.2s;
+}
+
+.toggle-container input:checked+label {
+    background: #3b82f6;
+    color: white;
+}
+
+.counter-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1e293b;
+    border-radius: 6px;
+    padding: 0.25rem;
+    justify-content: unset;
+    /* Override justify-content */
+    border: none;
+    /* Remove border */
+}
+
+.counter-input button {
+    width: 28px;
+    height: 28px;
+    background: #334155;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.counter-input button:hover {
+    background: #475569;
+}
+
+.counter-input span {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    color: #f8fafc;
+    width: auto;
+    /* Override width */
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #3b82f6;
+}
+
+.checkbox-wrapper label {
+    font-size: 0.875rem;
+    color: #e2e8f0;
+    cursor: pointer;
+}
+
+.age-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}

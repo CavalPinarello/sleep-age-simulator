@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Age Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Controls -->
+        <aside class="sidebar">
+            <header>
+                <h1>Sleep Age Simulator</h1>
+                <p class="subtitle">Scientific Visualization</p>
+            </header>
+
+            <div class="controls-scroll">
+                <!-- Age Control -->
+                <div class="control-group">
+                    <label>Demographics</label>
+                    <div class="sub-control">
+                        <label>Gender</label>
+                        <div class="toggle-container">
+                            <input type="radio" name="gender" id="gender-male" value="male" checked>
+                            <label for="gender-male">Male</label>
+                            <input type="radio" name="gender" id="gender-female" value="female">
+                            <label for="gender-female">Female</label>
+                        </div>
+                    </div>
+                    <div class="sub-control">
+                        <label for="age-slider">Age: <span id="age-value">25</span></label>
+                        <input type="range" id="age-slider" min="0" max="100" value="25" step="1">
+                    </div>
+                    <div class="age-labels">
+                        <span>Newborn</span>
+                        <span>Adult</span>
+                        <span>Elderly</span>
+                    </div>
+                </div>
+
+                <!-- Modifiers -->
+                <div class="control-group">
+                    <label>Chronotype & Shift</label>
+                    <div class="sub-control">
+                        <label>Chronotype</label>
+                        <select id="chronotype-select">
+                            <option value="lark">Morning Lark</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="owl">Night Owl</option>
+                        </select>
+                    </div>
+                    <div class="sub-control">
+                        <label>Jet Lag</label>
+                        <select id="jetlag-select">
+                            <option value="none">None</option>
+                            <option value="west_mild">West (Mild)</option>
+                            <option value="east_mild">East (Mild)</option>
+                            <option value="west_severe">West (Severe)</option>
+                            <option value="east_severe">East (Severe)</option>
+                        </select>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="social-jetlag-toggle">
+                        <label for="social-jetlag-toggle">Social Jet Lag</label>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Lifestyle Modifiers</label>
+                    <div class="sub-control">
+                        <label>Alcohol (Drinks)</label>
+                        <div class="counter-input">
+                            <button onclick="updateCounter('alcohol', -1)">-</button>
+                            <span id="alcohol-display">0</span>
+                            <button onclick="updateCounter('alcohol', 1)">+</button>
+                            <input type="hidden" id="alcohol-input" value="0">
+                        </div>
+                    </div>
+                    <div class="sub-control">
+                        <label>Caffeine (Cups)</label>
+                        <div class="counter-input">
+                            <button onclick="updateCounter('caffeine', -1)">-</button>
+                            <span id="caffeine-display">0</span>
+                            <button onclick="updateCounter('caffeine', 1)">+</button>
+                            <input type="hidden" id="caffeine-input" value="0">
+                        </div>
+                        <!-- Nuance Controls -->
+                        <div class="nuance-controls"
+                            style="margin-top: 0.5rem; padding-left: 0.5rem; border-left: 2px solid #334155;">
+                            <label style="font-size: 0.75rem; color: #94a3b8;">Hours Before Bed: <span
+                                    id="caffeine-time-val">0</span>h</label>
+                            <input type="range" id="caffeine-time-slider" min="0" max="12" value="0" step="1">
+
+                            <label style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem;">Metabolism</label>
+                            <div class="toggle-container" style="font-size: 0.7rem;">
+                                <input type="radio" name="metabolism" id="meta-slow" value="slow">
+                                <label for="meta-slow">Slow</label>
+                                <input type="radio" name="metabolism" id="meta-norm" value="normal" checked>
+                                <label for="meta-norm">Normal</label>
+                                <input type="radio" name="metabolism" id="meta-fast" value="fast">
+                                <label for="meta-fast">Fast</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-control">
+                        <label>Nocturia (Trips)</label>
+                        <div class="counter-input">
+                            <button onclick="updateCounter('nocturia', -1)">-</button>
+                            <span id="nocturia-display">0</span>
+                            <button onclick="updateCounter('nocturia', 1)">+</button>
+                            <input type="hidden" id="nocturia-input" value="0">
+                        </div>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="blue-light-toggle">
+                        <label for="blue-light-toggle">Blue Light (Screens 1h before bed)</label>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Clinical Factors</label>
+                    <div class="sub-control">
+                        <label>Sleep Apnea (SDB)</label>
+                        <input type="range" id="sdb-slider" min="0" max="10" value="0">
+                    </div>
+                    <div class="checkbox-wrapper" id="menopause-group" style="display: none;">
+                        <input type="checkbox" id="menopause-toggle">
+                        <label for="menopause-toggle">Peri-menopause</label>
+                    </div>
+                </div>
+
+                <!-- New Overlay Controls -->
+                <div class="control-group">
+                    <label>Overlays (Matthew Walker Model)</label>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="process-s-toggle">
+                        <label for="process-s-toggle">Show Sleep Drive (Adenosine)</label>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="process-c-toggle">
+                        <label for="process-c-toggle">Show Circadian (Melatonin)</label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Visualization -->
+        <main class="visualization-area">
+            <div class="canvas-container">
+                <canvas id="hypnogram"></canvas>
+            </div>
+
+            <!-- Pie Chart Dashboard (Bottom) -->
+            <div class="dashboard">
+                <h3>Sleep Architecture Breakdown</h3>
+                <div class="dashboard-content">
+                    <div class="pie-chart-container">
+                        <canvas id="pie-chart" width="180" height="180"></canvas>
+                        <div class="legend" id="pie-legend"></div>
+                    </div>
+                    <div class="metrics-grid" id="metrics-display"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
