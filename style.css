@@ -39,37 +39,29 @@ body {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    height: 100%;
+    /* Ensure it takes full height */
+    max-height: 100vh;
+    /* Constraint */
 }
 
-.sidebar header {
-    padding: 1.5rem;
-    border-bottom: 1px solid #1e293b;
-    text-align: left;
-    /* Override global header text-align */
-    margin-bottom: 0;
-    /* Override global header margin-bottom */
-}
+/* ... headers ... */
 
-.sidebar h1 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #f8fafc;
-    margin-bottom: 0.25rem;
-    background: none;
-    /* Override global h1 gradient */
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: unset;
-}
-
-.sidebar .subtitle {
-    font-size: 0.75rem;
-    color: #94a3b8;
+#controls-mask {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    /* Pass constraint down */
+    width: 100%;
 }
 
 .controls-scroll {
     flex: 1;
     overflow-y: auto;
     padding: 1.5rem;
+    min-height: 0;
+    /* Critical for flex scrolling */
 }
 
 /* --- MAIN VISUALIZATION --- */
@@ -81,6 +73,8 @@ body {
     /* Darker bg for contrast */
     padding: 0;
     position: relative;
+    overflow: hidden;
+    /* Manage internal scroll */
 }
 
 .canvas-container {
@@ -88,7 +82,8 @@ body {
     /* Take up most space */
     position: relative;
     width: 100%;
-    min-height: 0;
+    min-height: 250px;
+    /* Protect canvas from being crushed */
     /* Flexbox fix */
     background: var(--bg-secondary);
     /* Keep original background */
@@ -107,7 +102,8 @@ canvas#hypnogram {
 
 /* --- DASHBOARD (Bottom Strip) --- */
 .dashboard {
-    height: 180px;
+    flex: 0 0 auto;
+    /* Flexible height based on content */
     background: #0f172a;
     border-top: 1px solid #1e293b;
     padding: 1rem 2rem;
@@ -117,6 +113,7 @@ canvas#hypnogram {
     /* Remove border-radius */
     border: none;
     /* Remove border */
+    z-index: 10;
 }
 
 .dashboard h3 {
@@ -133,21 +130,23 @@ canvas#hypnogram {
 
 .dashboard-content {
     display: flex;
-    gap: 3rem;
+    gap: 2rem;
     align-items: center;
-    height: 100%;
+    flex-wrap: wrap;
+    /* Allow wrapping */
 }
 
 .pie-chart-container {
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    flex: 0 0 auto;
 }
 
 .legend {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem 1.5rem;
+    gap: 0.25rem 1rem;
 }
 
 .legend-item {
@@ -156,6 +155,7 @@ canvas#hypnogram {
     gap: 0.5rem;
     font-size: 0.8rem;
     color: #cbd5e1;
+    white-space: nowrap;
 }
 
 .legend-color {
@@ -166,33 +166,65 @@ canvas#hypnogram {
 
 .metrics-grid {
     display: flex;
-    gap: 2rem;
+    /* Fallback */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 1rem;
+    flex: 1;
     margin-left: auto;
     /* Push to right */
-    grid-template-columns: unset;
-    /* Override global grid-template-columns */
+    min-width: 0;
+    /* Enable shrinking */
 }
 
 .metric-card {
     background: #1e293b;
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem;
     border-radius: 8px;
     text-align: center;
-    min-width: 100px;
+    min-width: 0;
+    /* Enable shrinking */
     border: none;
     /* Remove border */
 }
 
 .metric-value {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #f8fafc;
 }
 
 .metric-label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: #94a3b8;
     margin-top: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Compare Mode Overrides */
+body.compare-active .dashboard {
+    padding: 0.75rem 0.5rem;
+}
+
+body.compare-active .dashboard-content {
+    gap: 1rem;
+}
+
+body.compare-active .pie-chart-container {
+    transform: scale(0.9);
+    /* Slight shrink */
+    gap: 0.5rem;
+}
+
+body.compare-active .metrics-grid {
+    gap: 0.5rem;
+}
+
+/* Ensure legend in compare mode wraps if needed */
+body.compare-active .legend {
+    grid-template-columns: 1fr;
 }
 
 /* --- CONTROLS STYLING --- */
@@ -270,6 +302,91 @@ input[type="range"] {
     accent-color: #3b82f6;
 }
 
+/* Comparison Layout */
+.viz-wrapper {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.visualization-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    overflow-y: hidden;
+    /* No scroll on area itself, canvas container handles resizing */
+    border-left: 1px solid #1e293b;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* In compare mode, areas shrink */
+body.compare-active .visualization-area {
+    padding: 0;
+    /* Full edge-to-edge */
+}
+
+body.compare-active .canvas-container {
+    border-radius: 4px;
+    /* Slight roundness when floating */
+}
+
+.viz-label {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: #334155;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #f8fafc;
+    opacity: 0.8;
+    pointer-events: none;
+    display: none;
+}
+
+body.compare-active .viz-label {
+    display: block;
+}
+
+/* Profile Tabs */
+.mode-toggle {
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background: #1e293b;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.profile-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.profile-tabs .tab {
+    flex: 1;
+    padding: 0.5rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.profile-tabs .tab.active {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+/* Active Profile Indicator in Sidebar */
+/* We can use a subtle border or glow to indicate which profile is being edited if not using tabs, but tabs are better */
 select {
     width: 100%;
     background: #1e293b;
